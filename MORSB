@@ -1,0 +1,68 @@
+from random import randint #Создать воображаемого противника, когда у тебя нет друзей.
+import os #Чтобы иметь красивый и чистый интерфейс для игры.
+ 
+board = []
+ 
+rules = str(input("Do you know how to play ?" "(" + '\x1b[1;31;1m' + 'n' + '\x1b[0m' + "/" + '\x1b[1;32;1m' + 'y' + '\x1b[0m' + ")"))
+ 
+for x in range(5):
+    board.append(["O"] * 5)# Создает матрицу 5x5.
+ 
+def print_board(board):
+    os.system('clear') #Очищать экран каждый ход игры
+    print("Let's play some Battleships ! :D")
+    if rules == "n":
+        print()
+        print("How to play : Each turn you can guess an unique position for the ship. You need to sunk the ship before you reach the maximum number of turns authorized.")
+        print()
+    print("Good Luck & Have Fun :P")
+    print("Version -2.0")
+    print()
+    print("Display of Quality.")
+    print("  0|1|2|3|4")
+    for row in range(len(board)): 
+        print(str(row) + "|" + "|".join(board[row])) #Чтобы иметь красивый матричный дисплей без "[" , "]" и ","
+    print()
+print_board(board) #Инициализирует поле
+ 
+def random_row(board):
+    return(randint(0, len(board) - 1)) # Генерирует случайное число от 0 до 4 для строк.
+ 
+def random_col(board): 
+    return(randint(0, len(board[0]) - 1)) # Генерирует случайное число от 0 до 4 для столбцов.
+ 
+#Присвоение сгенерированных случайных чисел ship_row и ship_col, которые являются соответственно координатами [j] и [i]корабля.
+
+ship_row = random_row(board) 
+ship_col = random_col(board)
+ 
+p1 = str(input("Enter your nickname : "))
+# n = int(input("Введите желаемое количество оборотов: "))
+ 
+for turn in range(6): #Для петли с нужным количеством витков.
+    print("Turn", turn) # Отображает фактический номер хода.
+ 
+    guess_col = int(input("Guess Col:")) #Позволяет игроку угадать координату [i] корабля.
+    guess_row = int(input("Guess Row:")) #Позволяет игроку угадать [j] координату корабля
+    
+    if guess_row == ship_row and guess_col == ship_col:# Проверяет, правильно ли догадался игрок и выиграл ли он.
+        print()
+        print('\x1b[1;32;1m' + 'Congratulations' + '\x1b[0m' +" "+ p1 + ", " + 'you sunk my battleship!')
+        break #Предотвращение продолжения работы игры.
+    else:
+        if ((guess_row < 0 or guess_row > 4) or (guess_col < 0 or guess_col > 4)): 
+                                                                                  # больше 4 и меньше 0.
+            print()
+            print("Oops, that's not even in the ocean.")
+        elif(board[guess_row][guess_col] == "•"): # Проверяет, играл ли уже игрок по этим координатам.
+            print()
+            print("You guessed that one already.")
+        else:
+            board[guess_row][guess_col] = "•" 
+            print()
+            print("You missed my battleship !") 
+            if turn == 5: #Эквивалентно количеству витков. Если корабль не поврежден, игра окончена.
+                print('\x1b[1;31;1m' + 'Game' + '\x1b[0m' + " " + '\x1b[1;31;1m' + 'Over.' + '\x1b[0m')
+                print()
+                break
+        print_board(board)
